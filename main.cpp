@@ -16,6 +16,14 @@ int main() {
     scoreText.setStyle(sf::Text::Bold);
     scoreText.setPosition({400, 0});
 
+    sf::Text escText(bitFont);
+
+    escText.setString("Press Esc for close...");
+    escText.setCharacterSize(16);
+    escText.setFillColor(sf::Color::White);
+    escText.setStyle(sf::Text::Bold);
+    escText.setPosition({0, 0});
+
     sf::FloatRect textRect = scoreText.getLocalBounds();
     scoreText.setOrigin(textRect.getCenter());
     scoreText.setPosition({800 / 2, 25});
@@ -52,6 +60,7 @@ int main() {
 
         window.draw(shape);
         window.draw(scoreText);
+        window.draw(escText);
 
         window.display();
 
