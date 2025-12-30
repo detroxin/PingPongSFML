@@ -31,14 +31,14 @@ int main() {
     rightPlayerScoreText.setString("0");
     rightPlayerScoreText.setCharacterSize(32);
     rightPlayerScoreText.setFillColor(sf::Color::White);
-    rightPlayerScoreText.setPosition({775, 10});
+    rightPlayerScoreText.setPosition({770, 10});
 
     sf::Text escText(digitalFont);
 
     escText.setString("Press Esc for close...");
     escText.setCharacterSize(16);
     escText.setFillColor(sf::Color::White);
-    escText.setPosition({0, 570});
+    escText.setPosition({5, 570});
 
     /*
     ******************************
