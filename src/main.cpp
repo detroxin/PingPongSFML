@@ -184,12 +184,13 @@ int main() {
 
         window.clear(sf::Color::Black);
 
-        window.draw(leftPlayerScoreText);
-        window.draw(rightPlayerScoreText);
-        window.draw(escText);
         window.draw(leftBat.getShape());
         window.draw(rightBat.getShape());
         window.draw(ball.getShape());
+
+        window.draw(leftPlayerScoreText);
+        window.draw(rightPlayerScoreText);
+        window.draw(escText);
 
         window.display();
     }
