@@ -1,4 +1,5 @@
 #include "bat.h"
+#include <algorithm>
 
 Bat::Bat (float startX, float startY) : m_Position(startX, startY)
 {
@@ -47,6 +48,8 @@ void Bat::update(sf::Time dt)
     {
         m_Position.y += m_Speed * dt.asSeconds();
     }
+
+    m_Position.y = std::clamp(m_Position.y, 0.0f, 550.0f);
 
     m_Shape.setPosition(m_Position);
 }

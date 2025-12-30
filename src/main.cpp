@@ -1,7 +1,9 @@
 #include "bat.h"
-#include <sstream>
+#include "ball.h"
+#include <iostream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), L"PingPong", sf::Style::Default);
@@ -18,25 +20,35 @@ int main() {
     sf::Font digitalFont("data/fonts/digital_7.ttf");
     //sf::Font dsDigitFont("data/fonts/DS-DIGIT.ttf");
 
-    sf::Text scoreText(digitalFont);
+    sf::Text leftPlayerScoreText(digitalFont);
+    sf::Text rightPlayerScoreText(digitalFont);
 
-    scoreText.setString("0 | 0");
-    scoreText.setCharacterSize(24);
-    scoreText.setFillColor(sf::Color::White);
-    //scoreText.setStyle(sf::Text::Bold);
-    scoreText.setPosition({400, 0});
+    leftPlayerScoreText.setString("0");
+    leftPlayerScoreText.setCharacterSize(32);
+    leftPlayerScoreText.setFillColor(sf::Color::White);
+    leftPlayerScoreText.setPosition({25, 10});
+
+    rightPlayerScoreText.setString("0");
+    rightPlayerScoreText.setCharacterSize(32);
+    rightPlayerScoreText.setFillColor(sf::Color::White);
+    rightPlayerScoreText.setPosition({775, 10});
 
     sf::Text escText(digitalFont);
 
     escText.setString("Press Esc for close...");
     escText.setCharacterSize(16);
     escText.setFillColor(sf::Color::White);
-    //escText.setStyle(sf::Text::Bold);
-    escText.setPosition({0, 0});
+    escText.setPosition({0, 570});
 
-    sf::FloatRect textRect = scoreText.getLocalBounds();
-    scoreText.setOrigin(textRect.getCenter());
-    scoreText.setPosition({800 / 2, 25});
+    /*
+    ******************************
+                AUDIO
+    ******************************
+    */
+
+    sf::SoundBuffer reboundBuffer("data/sounds/rebound-sound.wav");
+    sf::Sound reboundSound(reboundBuffer);
+
     /*
     ******************************
                 GAME
@@ -48,6 +60,8 @@ int main() {
 
     Bat leftBat(20, 600 / 2);
     Bat rightBat(800 - 20, 600 / 2);
+
+    Ball ball(800 / 2, 600 / 2);
 
     sf::Clock clock;
 
@@ -76,18 +90,10 @@ int main() {
                 {
                     leftBat.moveUp();
                 }
-                else
-                {
-                    leftBat.stopUp();
-                }
 
                 if(keyPressed->scancode == sf::Keyboard::Scancode::S)
                 {
                     leftBat.moveDown();
-                }
-                else
-                {
-                    leftBat.stopDown();
                 }
 
                 //RIGHT BAT
@@ -95,16 +101,37 @@ int main() {
                 {
                     rightBat.moveUp();
                 }
-                else
-                {
-                    rightBat.stopUp();
-                }
 
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
                 {
                     rightBat.moveDown();
                 }
-                else
+            }
+            else if(auto keyPressed = event->getIf<sf::Event::KeyReleased>()) 
+            {
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                {
+                    window.close();
+                }
+
+                //LEFT BAT
+                if(keyPressed->scancode == sf::Keyboard::Scancode::W)
+                {
+                    leftBat.stopUp();
+                }
+
+                if(keyPressed->scancode == sf::Keyboard::Scancode::S)
+                {
+                    leftBat.stopDown();
+                }
+
+                //RIGHT BAT
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Up)
+                {
+                    rightBat.stopUp();
+                }
+
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
                 {
                     rightBat.stopDown();
                 }
@@ -121,10 +148,33 @@ int main() {
         sf::Time dt = clock.restart();
         leftBat.update(dt);
         rightBat.update(dt);
+        ball.update(dt);
 
-        std::stringstream ss;
-        ss << scoreLeftPlayer << " | " << scoreRightPlayer;
-        scoreText.setString(ss.str());
+        leftPlayerScoreText.setString(std::to_string(scoreLeftPlayer));
+        rightPlayerScoreText.setString(std::to_string(scoreRightPlayer));
+        
+        //BALL LOGIC
+        if (ball.getPosition().position.y < 0 || 
+            ball.getPosition().position.y + ball.getPosition().size.y > 600)
+        {
+            ball.reboundUpOrBottom();
+        }
+
+        if (ball.getPosition().position.x < 0)
+        {
+            scoreRightPlayer++;
+            ball.reboundLeftOrRight();
+        }
+        if (ball.getPosition().position.x + ball.getPosition().size.x > 800)
+        {
+            scoreLeftPlayer++;
+            ball.reboundLeftOrRight();
+        }
+
+        if (ball.getPosition().findIntersection(leftBat.getPosition()) || ball.getPosition().findIntersection(rightBat.getPosition()))
+        {
+            ball.reboundBat();
+        }
 
         /*
         ******************************
@@ -134,10 +184,12 @@ int main() {
 
         window.clear(sf::Color::Black);
 
-        window.draw(scoreText);
+        window.draw(leftPlayerScoreText);
+        window.draw(rightPlayerScoreText);
         window.draw(escText);
         window.draw(leftBat.getShape());
         window.draw(rightBat.getShape());
+        window.draw(ball.getShape());
 
         window.display();
     }

@@ -8,14 +8,14 @@ LIB_PATHS = -Lsrc/lib
 
 CXXFLAGS = -Wall -g $(INCLUDES)
 
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system $(LIB_PATHS)
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio $(LIB_PATHS)
 
-TARGET = ./out
+TARGET = ./bin/main.exe
 
 OBJS = main.o bat.o ball.o
-SRC_MAIN = ./main.cpp
-SRC_BAT = ./bat.cpp
-SRC_BALL = ./ball.cpp
+SRC_MAIN = ./src/main.cpp
+SRC_BAT = ./src/bat.cpp
+SRC_BALL = ./src/ball.cpp
 
 all: clean build clean_objects
 
