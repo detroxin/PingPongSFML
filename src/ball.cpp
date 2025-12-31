@@ -23,9 +23,20 @@ void Ball::reboundUpOrBottom()
 {
     m_DirectionY = -m_DirectionY;
 }
-void Ball::reboundBat()
+void Ball::reboundBat(RandomGenerator& rng)
 {
+    m_Speed = rng.getNextRandomNumber(1100, 2300);
     m_DirectionX = -m_DirectionX;
+
+    int randomFactor = rng.getNextRandomNumber(0, 250); 
+
+    float yOffsetFactor = (randomFactor / 1000.0f);
+    
+    if (std::abs(m_DirectionY) < 0.1f) {
+        m_DirectionY = (m_DirectionY > 0) ? 0.1f : -0.1f;
+    }
+
+    m_DirectionY = (m_DirectionY > 0) ? yOffsetFactor : -yOffsetFactor;
 }
 void Ball::reboundLeftOrRight()
 {

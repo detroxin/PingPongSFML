@@ -1,5 +1,6 @@
 #include "bat.h"
 #include "ball.h"
+#include "RandomGenerator.h"
 #include <iostream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -54,6 +55,8 @@ int main() {
                 GAME
     ******************************
     */
+
+    RandomGenerator rng;
 
     int scoreLeftPlayer{0};
     int scoreRightPlayer{0};
@@ -173,7 +176,7 @@ int main() {
 
         if (ball.getPosition().findIntersection(leftBat.getPosition()) || ball.getPosition().findIntersection(rightBat.getPosition()))
         {
-            ball.reboundBat();
+            ball.reboundBat(rng);
         }
 
         /*
