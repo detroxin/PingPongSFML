@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(PingPong LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(DEPLOY_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>")
 
 include(FetchContent)
 FetchContent_Declare(SFML
@@ -24,4 +25,6 @@ target_include_directories(PingPong PRIVATE
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_libraries(PingPong PRIVATE SFML::Graphics SFML::Audio)
+target_link_libraries(PingPong PRIVATE SFML::Graphics SFML::Window SFML::System SFML::Audio)
+
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
