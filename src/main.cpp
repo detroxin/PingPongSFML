@@ -2,6 +2,7 @@
 #include "ball.h"
 #include "RandomGenerator.h"
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -9,7 +10,7 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), L"PingPong", sf::Style::Default);
 
-    window.setVerticalSyncEnabled(true);
+    //window.setVerticalSyncEnabled(true);
 
     /*
     ******************************
@@ -40,7 +41,16 @@ int main() {
     escText.setCharacterSize(16);
     escText.setFillColor(sf::Color::White);
     escText.setPosition({5, 570});
-
+    
+    //fps counter
+    float fps = 0.f;
+    float fpsTimer = 0.f;
+    int frameCount = 0;
+    sf::Text fpsText(digitalFont);
+    fpsText.setString("0");
+    fpsText.setCharacterSize(32);
+    fpsText.setFillColor(sf::Color::White);
+    fpsText.setPosition({650, 560});
     /*
     ******************************
                 AUDIO
@@ -149,6 +159,21 @@ int main() {
         
 
         sf::Time dt = clock.restart();
+
+        frameCount++;
+        fpsTimer += dt.asSeconds();
+        
+        if (fpsTimer >= 1.0f) {
+            fps = static_cast<float>(frameCount) / fpsTimer;
+            
+            frameCount = 0;
+            fpsTimer = 0.f;
+            
+            std::stringstream ss;
+            ss << "FPS: " << static_cast<int>(fps);
+            fpsText.setString(ss.str());
+        }
+
         leftBat.update(dt);
         rightBat.update(dt);
         ball.update(dt);
@@ -194,6 +219,7 @@ int main() {
         window.draw(leftPlayerScoreText);
         window.draw(rightPlayerScoreText);
         window.draw(escText);
+        window.draw(fpsText);
 
         window.display();
     }
