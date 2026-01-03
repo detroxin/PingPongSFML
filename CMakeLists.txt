@@ -17,7 +17,8 @@ add_executable(PingPong
     src/main.cpp
     src/RandomGenerator.cpp
     src/bat.cpp
-    src/ball.cpp)
+    src/ball.cpp
+    src/line.cpp)
 
 target_compile_features(PingPong PRIVATE cxx_std_17)
 

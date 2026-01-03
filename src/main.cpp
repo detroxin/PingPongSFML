@@ -1,11 +1,12 @@
-#include "bat.h"
-#include "ball.h"
-#include "RandomGenerator.h"
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "bat.h"
+#include "ball.h"
+#include "RandomGenerator.h"
+#include "line.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), L"PingPong", sf::Style::Default);
@@ -75,6 +76,9 @@ int main() {
     Bat rightBat(800 - 20, 600 / 2);
 
     Ball ball(800 / 2, 600 / 2);
+
+    Line line;
+    line.generate(800, 600, 6, 20);
 
     sf::Clock clock;
 
@@ -211,6 +215,8 @@ int main() {
         */
 
         window.clear(sf::Color::Black);
+
+        line.render(&window, 800, 600);
 
         window.draw(leftBat.getShape());
         window.draw(rightBat.getShape());
